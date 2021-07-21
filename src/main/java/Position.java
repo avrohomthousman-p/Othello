@@ -1,8 +1,6 @@
 //Avrohom Tzvi Housman
 
-/**I copy/pasted this class from the previous homework. I kept the documentation.
- *
- * This class is used to reference a specific position in a 2 dimentinal array
+/** This class is used to reference a specific position in a 2 dimentinal array
  * of any object. In next homework I plan to use it to point to an array of JPanels
  * that change color during a game of Othello. Some methods in the Othello interface
  * return a list of these objects. Each element of that list points to a specific
