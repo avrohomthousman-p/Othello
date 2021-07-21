@@ -42,8 +42,8 @@ public class OthelloGUI {
             }
         }
 
-        //I really dont like this design but I cant get functions like Tread.sleep()
-        //or wait() to work properly. Instead, the computer only goes when you click
+        //There are some problems with Tread.sleep()
+        //and wait() so instead, the computer only goes when you click
         //this button.
         next = new JButton("next");
         next.addActionListener(new ButtonListener());
@@ -119,7 +119,7 @@ public class OthelloGUI {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(gameOver) return; //this button wont do anything after the game
+            if(gameOver) return; //this button wont do anything after the game has ended
             if(playersTurn){
                 JOptionPane.showMessageDialog(null, "Its your turn. Click next after you have gone.");
             }
