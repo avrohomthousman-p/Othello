@@ -1,9 +1,6 @@
 /**
  * This interface is basically a way to allow me to pass a lambda
- * to a function. I did not come up with this idea. I found it here
- * https://www.tutorialspoint.com/how-to-initialize-an-array-using-lambda-expression-in-java#
- * Just to be clear, I googled how to pass a lambda to a function.
- * This Othello algorithm is my own design.
+ * to a function.
  */
 public interface Shifter {
     /**
