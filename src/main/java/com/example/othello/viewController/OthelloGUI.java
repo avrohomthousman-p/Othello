@@ -15,10 +15,13 @@ import java.util.HashMap;
  */
 public class OthelloGUI {
     private static final int DIMENSIONS = 8;
+    private static final String SCORE_DISPLAY = "Black: %d \t White: %d";
     private final JFrame mainWindow = new JFrame();
     private final JPanel gameBoard = new JPanel();
     private final JPanel[][] boardPanels = new JPanel[DIMENSIONS][DIMENSIONS];
     private final OthelloModel model;
+    private final JLabel currentTurn = new JLabel();
+    private final JLabel score = new JLabel();
     private final JButton next = new JButton("next");
     private boolean playersTurn;
     private boolean gameOver;
@@ -102,11 +105,19 @@ public class OthelloGUI {
         JPanel statusBar = new JPanel(new FlowLayout());
         statusBar.setSize(700, 50);
 
+
+        /*     Add contents to the status bar     */
+        currentTurn.setText("Your Turn");
+        statusBar.add(currentTurn);
+
         //There are some problems with Tread.sleep()
         //and wait() so instead, the computer only goes when you click
         //this button.
         next.addActionListener(new ButtonListener());
         statusBar.add(next);
+
+        score.setText(String.format(SCORE_DISPLAY, 2, 2));
+        statusBar.add(score);
 
 
         mainWindow.add(statusBar, BorderLayout.NORTH);
