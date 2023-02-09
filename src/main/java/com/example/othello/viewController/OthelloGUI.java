@@ -5,10 +5,7 @@ import com.example.othello.model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.List;
 import java.util.HashMap;
 
@@ -32,7 +29,7 @@ public class OthelloGUI {
         mainWindow.setTitle("Othello");
         mainWindow.setSize(700, 700);
         mainWindow.setResizable(false);//resize will mess up the mouse listener. see below
-        mainWindow.addMouseListener(new MyActionListner());
+        mainWindow.addMouseListener(new BoardClickListener());
         mainWindow.getContentPane().setLayout(new GridLayout(8, 8));
 
         model = new OthelloGreedyAlgorithm();
@@ -85,20 +82,29 @@ public class OthelloGUI {
         }
     }
 
-    private class MyActionListner implements MouseListener {
+
+    /**
+     * Responds to clicks on the game board by informing the model that the
+     * player went in that location for his/her turn.
+     */
+    private class BoardClickListener extends MouseAdapter {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(gameOver) return;//stop you from taking a turn after the game ends.
+            if(gameOver){ //stop you from taking a turn after the game ends.
+                return;
+            }
+
             try{
                 if(!playersTurn){
                     throw new IllegalMoveException("its not your turn");
                 }
                 //the window is 700 x 700 pixels, so every square is 87.5 square pixels
-                //I made it impossible to resize the window, so this calculation cant get messed up.
+                //I made it impossible to resize the window, so this calculation can't get messed up.
                 int x = e.getX();
                 int y = e.getY();
                 Position chosen = new Position((int)(y / 87.5), (int)(x / 87.5));
+
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
                 playersTurn = false;
@@ -107,20 +113,8 @@ public class OthelloGUI {
                 JOptionPane.showMessageDialog(null, error.getMessage());
             }
         }
-
-        //do nothing for all these events
-        @Override
-        public void mousePressed(MouseEvent e) {}
-
-        @Override
-        public void mouseReleased(MouseEvent e) {}
-
-        @Override
-        public void mouseEntered(MouseEvent e) {}
-
-        @Override
-        public void mouseExited(MouseEvent e) {}
     }
+
 
     private class ButtonListener implements ActionListener{
 
