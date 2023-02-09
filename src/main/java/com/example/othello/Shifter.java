@@ -1,13 +1,14 @@
 package com.example.othello;
 
 /**
- * This interface is basically a way to allow me to pass a lambda
- * to a function.
+ * Represents the action of moving from one square on the game board to the adjacent square.
  */
+@FunctionalInterface
 public interface Shifter {
     /**
-     * This method defines a shift from one position in a matrix to another.
-     * For example, moving right would mean incrementing com.example.othello.Position.j
+     * Defines a shift from one position in a matrix to another.
+     * For example, moving right would mean incrementing Position.j
+     * 
      * @param p the starting position.
      */
     void shift(Position p);

@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.HashMap;
 
 
+/**
+ * Runs a game of Othello on a GUI.
+ */
 public class OthelloGUI {
     private static final int DIMENSIONS = 8;
     private JPanel[][] boardColor;

@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+
+/**
+ * Implementation of the {@link OthelloModel OthelloModel interface} that has the computer
+ * always make the move that captures the largest number of pieces in the short term.
+ */
 public class OthelloGreedyAlgorithim implements OthelloModel {
 
     //these are all the directions we need to check for captured pieces
@@ -107,18 +112,19 @@ public class OthelloGreedyAlgorithim implements OthelloModel {
 
 
     /**
-     * This method calculates how many spaces change color as a result of the specified move,
-     * not including the move itself. The NUMBER of spots captured is calculated, but the actual
+     * Calculates how many spaces change color as a result of the specified move, not
+     * including the move itself. The NUMBER of spots captured is calculated, but the actual
      * spots are not specified.
      *
      * This method looks at the changes that happen in all 8
-     * directions away from the chosen spot. South, south west, west, north west, north,
-     * north east, east, and south east. These 8 directions are found in the static array 'shifts'
+     * directions away from the chosen spot. South, South-West, West, North-West, North,
+     * North-East, East, and South-East. These 8 directions are found in the static array 'shifts'
      *
      * This method is used to help the computer decide which move to take.
-     * @param possibleNextMove the move whose outcome will be calculated
+     *
+     * @param possibleNextMove the move whose outcome will be calculated.
      * @return the number of spaces that will be captured (change color, not including the move itself),
-     * in all directions, if the specified move is taken.
+     *          in all directions, if the specified move is taken.
      */
     protected int getCaptureCount(Position possibleNextMove){
         int total = 0;
@@ -149,28 +155,29 @@ public class OthelloGreedyAlgorithim implements OthelloModel {
             if(color == null){//if that spot is not in the hashmap because its green
                 return 0;
             }
-            else if(color == TileColor.BLACK){//if you hit your own peice
+            else if(color == TileColor.BLACK){//if you hit your own piece
                 return peicesCaptured;
             }
             else{
                 peicesCaptured++;
             }
         }
-        return 0; //this happens when all the peices are white till the end of the board
+        return 0; //this happens when all the pieces are white till the end of the board
     }
 
     /**
-     * This method finds all the spots that change color as a result of a players move.
-     * This includes the move itself. The method checks in all directions going away from the
-     * chosen spot to see if the spots there are captured.
+     * Finds all the spots that change color as a result of a players move, including the spot
+     * itself that was chosen by the player. This method checks in all directions going away
+     * from the chosen spot to see if any of the spots there are captured.
      *
-     * This method differs from getCaptureCount() in its return type. getCaptureCount() only
-     * counts the NUMBER of spots captured (to determan if that move is worthwhile), this
-     * method collects and returns a List of the spots themselves. This should be used only
-     * once the move has already been chosen. This seperation avoids the creation of 8 List
-     * objects (one for each direction) for every potential move.
+     * This method differs from the {@link this#getCaptureCount getCaptureCount method} in its
+     * return type. getCaptureCount only counts the NUMBER of spots captured (to determan if
+     * that move is worthwhile), this method collects and returns a List of the spots themselves.
+     * This should be used only once the move has already been chosen. This separation avoids the
+     * creation of 8 List objects (one for each direction) for every potential move.
+     *
      * @param chosenMove the move the player or computer has taken.
-     * @param playersTurn a boolean that tells if the move being analized was done by the player
+     * @param playersTurn a boolean that tells if the move being analyzed was done by the player
      *                    or the computer.
      * @return a list of all the spots that changed color, including the spot of the move itself.
      */
@@ -184,14 +191,15 @@ public class OthelloGreedyAlgorithim implements OthelloModel {
     }
 
     /**
-     * This method finds all the spots that change color as a result of the chosen move.
-     * It checks all the spots ONLY in the direction specified by the inputted com.example.othello.Shifter object.
+     * Finds all the spots that change color as a result of the chosen move.
+     * It checks all the spots ONLY in the direction specified by the Shifter object provided.
+     *
      * @param shiftPosition a function that moves the position in a given direction.
      * @param chosenMove the move the player or computer has chosen to go.
      * @param playersTurn a boolean that says whose move is being evaluated. the player (WHITE)
      *                    or the computer (BLACK).
      * @return a list of spots that change color as a result of the specified move, only taking
-     * into account changes in one direction (specified by the Consumer input)
+     *                    into account changes in one direction (specified by the Shifter input).
      */
     protected List<Position> addSpotsToOutput(Shifter shiftPosition, Position chosenMove, boolean playersTurn){
         chosenMove = new Position(chosenMove);//deep copy
