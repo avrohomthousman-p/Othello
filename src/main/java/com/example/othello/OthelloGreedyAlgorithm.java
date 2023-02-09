@@ -11,24 +11,24 @@ import java.util.List;
  * Implementation of the {@link OthelloModel OthelloModel interface} that has the computer
  * always make the move that captures the largest number of pieces in the short term.
  */
-public class OthelloGreedyAlgorithim implements OthelloModel {
+public class OthelloGreedyAlgorithm implements OthelloModel {
 
     //these are all the directions we need to check for captured pieces
     protected static final Shifter[] shifts = new Shifter[]{
-            (position -> position.i++), //move south
-            (position)->{position.i++; position.j++;}, //move south east
-            (position -> position.j++), //move east
-            (position -> {position.i--; position.j++;}), //move north east
-            (position -> position.i--), //move north
-            (position -> {position.i--; position.j--;}), //move north west
-            (position -> position.j--), //move west
-            (position -> {position.i++; position.j--;}) //move south west
+            (position -> position.i++),                     //move south
+            (position)->{position.i++; position.j++;},      //move south-east
+            (position -> position.j++),                     //move east
+            (position -> {position.i--; position.j++;}),    //move north-east
+            (position -> position.i--),                     //move north
+            (position -> {position.i--; position.j--;}),    //move north-west
+            (position -> position.j--),                     //move west
+            (position -> {position.i++; position.j--;})     //move south-west
 
     };
     protected LinkedList<Position> greenSpots;
     protected HashMap<Position, TileColor> nonGreenSpots;
 
-    public OthelloGreedyAlgorithim(){
+    public OthelloGreedyAlgorithm(){
         this.greenSpots = new LinkedList<>();
         this.nonGreenSpots = new HashMap<>();
     }
@@ -60,9 +60,11 @@ public class OthelloGreedyAlgorithim implements OthelloModel {
         if(nonGreenSpots.containsKey(playerMove)){//if the player tried to go in a non-empty spot
             throw new IllegalMoveException("players can only go in unoccupied spots");
         }
+
         List<Position> tilesFlipped = new ArrayList<>();
         tilesFlipped.add(playerMove);//the actual place he went needs to become white
         tilesFlipped.addAll(getCapturedSpots(playerMove, true));
+
         //make sure the chosen move is legal
         if(tilesFlipped.size() == 1){//the only spot that was changed was the spot he chose.
             throw new IllegalMoveException("players can only go in spots that cause at least one peice to be captured.");
@@ -71,7 +73,7 @@ public class OthelloGreedyAlgorithim implements OthelloModel {
         for(Position p : tilesFlipped){
             nonGreenSpots.put(p, TileColor.WHITE);
         }
-        greenSpots.remove(playerMove);//thats the only one that started as green
+        greenSpots.remove(playerMove);//that's the only one that started as green
         return tilesFlipped;
     }
 
@@ -138,16 +140,18 @@ public class OthelloGreedyAlgorithim implements OthelloModel {
 
 
     /**
-     * This method calculates how many spots will change color as a result of the specified move, but
-     * it only checks in ONE direction. This method is used to help the computer decide which move to take.
-     * @param chosenMove the move whose results will be specified.
-     * @param shiftToUse a function that defines which direction we are checking. It applies that shift
-     *                      to the com.example.othello.Position object.
-     * @return the number of spots that will be captured (i.e. not including the move itself).
+     * Calculates how many spots will change color as a result of the specified move, but
+     * only checks in ONE direction. This method is used to help the computer decide which move to take.
+     *
+     * @param chosenMove the move whose results will be calculated.
+     * @param shiftToUse a function that defines which direction we are checking and applies that shift
+     *                      to the specified Position object.
+     * @return the number of spots that will be captured (not including the move itself).
      */
     protected int countSpots(Position chosenMove, Shifter shiftToUse){
         chosenMove = new Position(chosenMove); //make deep copy
         int peicesCaptured = 0;
+
         //while index is not out of bounds
         while(chosenMove.i >= 0 && chosenMove.i < DIMENSIONS && chosenMove.j >= 0 && chosenMove.j < DIMENSIONS){
             shiftToUse.shift(chosenMove);

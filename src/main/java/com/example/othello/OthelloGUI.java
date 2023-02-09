@@ -32,7 +32,7 @@ public class OthelloGUI {
         mainWindow.addMouseListener(new MyActionListner());
         mainWindow.getContentPane().setLayout(new GridLayout(8, 8));
 
-        model = new OthelloGreedyAlgorithim();
+        model = new OthelloGreedyAlgorithm();
         HashMap<Position, TileColor> coloredTiles = model.startGame();
         //set up each space on the board
         boardColor = new JPanel[DIMENSIONS][DIMENSIONS];
