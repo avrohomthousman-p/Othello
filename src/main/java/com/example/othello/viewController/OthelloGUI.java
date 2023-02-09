@@ -15,22 +15,22 @@ import java.util.HashMap;
  */
 public class OthelloGUI {
     private static final int DIMENSIONS = 8;
-    private JPanel[][] boardColor;
-    private JFrame mainWindow;
-    private OthelloModel model;
-    private JButton next;
+    private final JPanel[][] boardColor;
+    private final JFrame mainWindow;
+    private final OthelloModel model;
+    private final JButton next;
     private boolean playersTurn;
     private boolean gameOver;
 
     public OthelloGUI(){
-        //baisic setup
+        //basic setup
         mainWindow = new JFrame();
         mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainWindow.setTitle("Othello");
         mainWindow.setSize(700, 700);
         mainWindow.setResizable(false);//resize will mess up the mouse listener. see below
         mainWindow.addMouseListener(new BoardClickListener());
-        mainWindow.getContentPane().setLayout(new GridLayout(8, 8));
+        mainWindow.getContentPane().setLayout(new GridLayout(DIMENSIONS, DIMENSIONS));
 
         model = new OthelloGreedyAlgorithm();
         HashMap<Position, TileColor> coloredTiles = model.startGame();
