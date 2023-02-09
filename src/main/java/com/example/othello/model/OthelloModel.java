@@ -1,14 +1,10 @@
-package com.example.othello;
+package com.example.othello.model;
+
+import com.example.othello.TileColor;
 
 import java.util.HashMap;
 import java.util.List;
 
-
-/**
- * Used to track the state of each tile on the board. White and Black belong to the
- * corresponding player, and Green is neutral.
- */
-enum TileColor{GREEN, WHITE, BLACK}
 
 
 /**

@@ -1,4 +1,7 @@
-package com.example.othello;
+package com.example.othello.viewController;
+
+import com.example.othello.TileColor;
+import com.example.othello.model.*;
 
 import javax.swing.*;
 import java.awt.*;

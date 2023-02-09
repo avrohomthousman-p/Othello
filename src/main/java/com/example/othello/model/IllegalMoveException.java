@@ -1,4 +1,4 @@
-package com.example.othello;
+package com.example.othello.model;
 
 public class IllegalMoveException extends RuntimeException{
     public IllegalMoveException(){

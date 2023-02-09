@@ -1,4 +1,4 @@
-package com.example.othello;
+package com.example.othello.model;
 
 /**
  * This class is used to reference a specific position in a 2 dimensional array

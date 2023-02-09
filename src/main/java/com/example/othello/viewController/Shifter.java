@@ -1,4 +1,6 @@
-package com.example.othello;
+package com.example.othello.viewController;
+
+import com.example.othello.model.Position;
 
 /**
  * Represents the action of moving from one square on the game board to the adjacent square.
