@@ -15,60 +15,101 @@ import java.util.HashMap;
  */
 public class OthelloGUI {
     private static final int DIMENSIONS = 8;
-    private final JPanel[][] boardColor;
-    private final JFrame mainWindow;
+    private final JFrame mainWindow = new JFrame();
+    private final JPanel gameBoard = new JPanel();
+    private final JPanel[][] boardPanels = new JPanel[DIMENSIONS][DIMENSIONS];
     private final OthelloModel model;
-    private final JButton next;
+    private final JButton next = new JButton("next");
     private boolean playersTurn;
     private boolean gameOver;
 
+
+
     public OthelloGUI(){
-        //basic setup
-        mainWindow = new JFrame();
-        mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainWindow.setTitle("Othello");
-        mainWindow.setSize(700, 700);
-        mainWindow.setResizable(false);//resize will mess up the mouse listener. see below
-        mainWindow.addMouseListener(new BoardClickListener());
-        mainWindow.getContentPane().setLayout(new GridLayout(DIMENSIONS, DIMENSIONS));
+        setupMainWindow();
 
         model = new OthelloGreedyAlgorithm();
-        HashMap<Position, TileColor> coloredTiles = model.startGame();
-        //set up each space on the board
-        boardColor = new JPanel[DIMENSIONS][DIMENSIONS];
-        for(int i = 0; i < DIMENSIONS; i++){
-            for(int j = 0; j < DIMENSIONS; j++){
-                JPanel current = new JPanel();
-                current.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                boardColor[i][j] = current;
-                setStartingColor(coloredTiles, i, j);
-                mainWindow.getContentPane().add(current);
-            }
-        }
 
-        //There are some problems with Tread.sleep()
-        //and wait() so instead, the computer only goes when you click
-        //this button.
-        next = new JButton("next");
-        next.addActionListener(new ButtonListener());
-        boardColor[7][7].add(next);
+        setupGameBoard();
+
+        setupStatusBar();
+
+
         playersTurn = true;
         gameOver = false;
 
+        gameBoard.setVisible(true);
         mainWindow.setVisible(true);
     }
+
+
+    /**
+     * Does basic setup of the window the app will run in.
+     */
+    private void setupMainWindow(){
+        mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainWindow.setTitle("Othello");
+        mainWindow.setSize(700, 750);
+        mainWindow.setResizable(false);
+        mainWindow.setLayout(new BorderLayout());
+    }
+
+
+    /**
+     * Does basic setup of the game board.
+     */
+    private void setupGameBoard(){
+        gameBoard.setSize(700, 700);
+        gameBoard.addMouseListener(new BoardClickListener());
+        gameBoard.setLayout(new GridLayout(DIMENSIONS, DIMENSIONS));
+
+        HashMap<Position, TileColor> coloredTiles = model.startGame();
+
+        //set up each space on the board
+        for(int i = 0; i < DIMENSIONS; i++){
+            for(int j = 0; j < DIMENSIONS; j++){
+                JPanel current = new JPanel();
+                current.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+                boardPanels[i][j] = current;
+                setStartingColor(coloredTiles, i, j);
+                gameBoard.add(current);
+            }
+        }
+
+        mainWindow.add(gameBoard, BorderLayout.CENTER);
+    }
+
 
     private void setStartingColor(HashMap<Position, TileColor> coloredTiles, int i, int j){
         TileColor color = coloredTiles.get(new Position(i, j));
         if(color == null){
-            boardColor[i][j].setBackground(Color.GREEN);
+            boardPanels[i][j].setBackground(Color.GREEN);
         }
         else if(color == TileColor.BLACK){
-            boardColor[i][j].setBackground(Color.BLACK);
+            boardPanels[i][j].setBackground(Color.BLACK);
         }
         else{
-            boardColor[i][j].setBackground(Color.WHITE);
+            boardPanels[i][j].setBackground(Color.WHITE);
         }
+    }
+
+
+
+    /**
+     * Sets up the status bar.
+     */
+    private void setupStatusBar(){
+        JPanel statusBar = new JPanel(new FlowLayout());
+        statusBar.setSize(700, 50);
+
+        //There are some problems with Tread.sleep()
+        //and wait() so instead, the computer only goes when you click
+        //this button.
+        next.addActionListener(new ButtonListener());
+        statusBar.add(next);
+
+
+        mainWindow.add(statusBar, BorderLayout.NORTH);
     }
 
 
@@ -78,7 +119,7 @@ public class OthelloGUI {
 
         Color c = (player == TileColor.BLACK ? Color.BLACK : Color.WHITE);
         for(Position p : tilesFlipped){
-            boardColor[p.i][p.j].setBackground(c);
+            boardPanels[p.i][p.j].setBackground(c);
         }
     }
 
@@ -99,15 +140,24 @@ public class OthelloGUI {
                 if(!playersTurn){
                     throw new IllegalMoveException("its not your turn");
                 }
-                //the window is 700 x 700 pixels, so every square is 87.5 square pixels
-                //I made it impossible to resize the window, so this calculation can't get messed up.
+
+
                 int x = e.getX();
                 int y = e.getY();
-                Position chosen = new Position((int)(y / 87.5), (int)(x / 87.5));
+
+
+                /*   The coordinate clicked divided by the size of each position tells us the
+                     index of the clicked panel.   */
+                Position chosen = new Position(
+                        (y / (gameBoard.getWidth() / DIMENSIONS)),
+                        (x / (gameBoard.getHeight() / DIMENSIONS)));
+
+
 
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
                 playersTurn = false;
+
             }
             catch(IllegalMoveException error){
                 JOptionPane.showMessageDialog(null, error.getMessage());
