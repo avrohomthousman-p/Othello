@@ -22,7 +22,7 @@ public class OthelloGUI {
     private final OthelloModel model;
     private final JLabel currentTurn = new JLabel();
     private final JLabel score = new JLabel();
-    private final JButton next = new JButton("next");
+    private final JButton nextTurnBtn = new JButton("next");
     private boolean playersTurn;
     private boolean gameOver;
 
@@ -113,8 +113,8 @@ public class OthelloGUI {
         //There are some problems with Tread.sleep()
         //and wait() so instead, the computer only goes when you click
         //this button.
-        next.addActionListener(new ButtonListener());
-        statusBar.add(next);
+        nextTurnBtn.addActionListener(new NextTurnButtonListener());
+        statusBar.add(nextTurnBtn);
 
         score.setText(String.format(SCORE_DISPLAY, 2, 2));
         statusBar.add(score);
@@ -124,6 +124,12 @@ public class OthelloGUI {
     }
 
 
+    /**
+     * Changes the colors of the specified tiles on the board to be the specified color.
+     *
+     * @param tilesFlipped the tiles that need their colors changed.
+     * @param player the player who now controls those tiles (the color to display).
+     */
     private void updateBoard(List<Position> tilesFlipped, TileColor player){
         if(player == TileColor.GREEN)
             throw new IllegalArgumentException("a non green tile can never become green");
@@ -151,7 +157,7 @@ public class OthelloGUI {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(gameOver){ //stop you from taking a turn after the game ends.
+            if(gameOver){       //stop you from taking a turn after the game ends.
                 return;
             }
 
@@ -186,23 +192,29 @@ public class OthelloGUI {
     }
 
 
-    private class ButtonListener implements ActionListener{
+    private class NextTurnButtonListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(gameOver) return; //this button wont do anything after the game has ended
+            if(gameOver){       //Ensure this button won't do anything after the game has ended
+                return;
+            }
             if(playersTurn){
-                JOptionPane.showMessageDialog(null, "Its your turn. Click next after you have gone.");
+                JOptionPane.showMessageDialog(null,
+                        "Its your turn. Click next after you have gone.");
+
+                return;
             }
-            else{
-                List<Position> move = model.getComputerMove();
-                if(move == null){//the computer has no more legal moves.
-                    gameOver = true;
-                    return;
-                }
-                updateBoard(move, TileColor.BLACK);
-                playersTurn = true;
+
+
+            List<Position> move = model.getComputerMove();
+            if(move == null){       //the computer has no more legal moves.
+                gameOver = true;
+                return;
             }
+            updateBoard(move, TileColor.BLACK);
+            playersTurn = true;
+            updateStatusBar();
         }
     }
 }
