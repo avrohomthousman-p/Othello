@@ -136,6 +136,14 @@ public class OthelloGUI {
 
 
     /**
+     * Updates the status bar to display the correct score and player turn.
+     */
+    private void updateStatusBar(){
+        //TODO
+    }
+
+
+    /**
      * Responds to clicks on the game board by informing the model that the
      * player went in that location for his/her turn.
      */
@@ -168,6 +176,7 @@ public class OthelloGUI {
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
                 playersTurn = false;
+                updateStatusBar();
 
             }
             catch(IllegalMoveException error){
