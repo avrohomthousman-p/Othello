@@ -115,7 +115,6 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
     }
 
 
-
     /**
      * Calculates how many spaces change color as a result of the specified move, not
      * including the move itself. The NUMBER of spots captured is calculated, but the actual
@@ -230,6 +229,32 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         }
         output.clear();
         return output;
+    }
+
+
+    @Override
+    public boolean isPlayersTurn() {
+        return false;
+    }
+
+    @Override
+    public boolean isGameOver() {
+        return false;
+    }
+
+    @Override
+    public TileColor getWinner() {
+        return null;
+    }
+
+    @Override
+    public int getScoreOfBlackPlayer() {
+        return 0;
+    }
+
+    @Override
+    public int getScoreOfWhitePlayer() {
+        return 0;
     }
 
 
