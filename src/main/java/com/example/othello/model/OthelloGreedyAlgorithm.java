@@ -122,7 +122,8 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         greenSpots.remove(playerMove);//that's the only one that started as green
 
 
-        whitePieces += tilesFlipped.size();
+        whitePieces += tilesFlipped.size();             //some pieces became white
+        blackPieces -= (tilesFlipped.size() - 1);       //some pieces became no longer black
         playersTurn = false;
 
         return tilesFlipped;
@@ -171,7 +172,8 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
         playersTurn = true;
-        blackPieces += tilesFlipped.size();
+        blackPieces += tilesFlipped.size();         //pieces became black
+        whitePieces -= (tilesFlipped.size() - 1);   //pieces that are no longer white
 
 
         //if the computers move left no more moves for the player
