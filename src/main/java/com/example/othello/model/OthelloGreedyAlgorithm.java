@@ -142,7 +142,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         int maxCaptured = 0;
         Position maxPosition = null;
         for(Position p : greenSpots){
-            int count = getCaptureCount(p);
+            int count = getCaptureCount(p, TileColor.BLACK);
             if(count >= maxCaptured){
                 maxCaptured = count;
                 maxPosition = p;
@@ -150,9 +150,10 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         }
 
 
-        //if there are no moves left (the board is full)
+        //if there are no moves left for the computer.
         if(maxCaptured <= 0){
             JOptionPane.showMessageDialog(null, "Game Over.");
+            gameIsRunning = false;
             return null;
         }
 
@@ -172,7 +173,12 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         playersTurn = true;
         blackPieces += tilesFlipped.size();
 
-        //TODO: check if game ends becuase there are no more moves for the player
+
+        //if the computers move left no more moves for the player
+        if(!thereAreLegalMovesLeft(true)){
+            gameIsRunning = false;
+        }
+
 
         return tilesFlipped;
     }
@@ -187,17 +193,20 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      * South, South-West, West, North-West, North, North-East, East, and South-East. These 8
      * directions are found in the static array 'shifts'
      *
-     * This method is used to help the computer decide which move to take.
+     * This method is used to help the computer decide which move to take, and to check if there
+     * are any moves left for any given player.
      *
      * @param possibleNextMove the move whose outcome will be calculated.
+     * @param playerDoingMove the player who is (considering) making the specified move.
+     *
      * @return the number of spaces that will be captured (change color, not including the move itself),
      *          in all directions, if the specified move is taken.
      */
-    protected int getCaptureCount(Position possibleNextMove){
+    protected int getCaptureCount(Position possibleNextMove, TileColor playerDoingMove){
         int total = 0;
 
         for(Shifter s : shifts){
-            total += countSpots(possibleNextMove, s);
+            total += countSpots(possibleNextMove, s, playerDoingMove);
         }
 
         return total;
@@ -211,9 +220,11 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      * @param chosenMove the move whose results will be calculated.
      * @param shiftToUse a function that defines which direction we are checking and applies that shift
      *                      to the specified Position object.
+     * @param playerDoingMove the player who is (considering) going in the specified location.
+     *
      * @return the number of spots that will be captured (not including the move itself).
      */
-    protected int countSpots(Position chosenMove, Shifter shiftToUse){
+    protected int countSpots(Position chosenMove, Shifter shiftToUse, TileColor playerDoingMove){
         chosenMove = new Position(chosenMove); //make deep copy
         int peicesCaptured = 0;
 
@@ -224,7 +235,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
             if(color == null){//if that spot is not in the hashmap because its green
                 return 0;
             }
-            else if(color == TileColor.BLACK){//if you hit your own piece FIXME: only works for computer move
+            else if(color == playerDoingMove){//if you hit your own piece
                 return peicesCaptured;
             }
             else{
@@ -306,8 +317,10 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      *      game continues), or false otherwise.
      */
     private boolean thereAreLegalMovesLeft(boolean forPlayer){
-        for(Position p : greenSpots){
-            if(getCaptureCount(p) > 0){ //FIXME: this wont work because this method assumes thePlayer is the computer
+        final TileColor player = (forPlayer ? TileColor.WHITE : TileColor.BLACK);
+
+        for(Position location : greenSpots){
+            if(getCaptureCount(location, player) > 0){
                 return true;
             }
         }
