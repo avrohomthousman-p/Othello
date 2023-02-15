@@ -124,6 +124,13 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         blackPieces -= (tilesFlipped.size() - 1);       //some pieces became no longer black
         playersTurn = false;
 
+
+
+        if(thereAreNoLegalMovesLeft(false)){
+            gameIsRunning = false;
+        }
+
+
         return tilesFlipped;
     }
 
@@ -149,13 +156,6 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         }
 
 
-        //if there are no moves left for the computer.
-        if(maxCaptured <= 0){
-            gameIsRunning = false;
-            return null;
-        }
-
-
 
         List<Position> tilesFlipped = getCapturedSpots(maxPosition, false);
         tilesFlipped.add(maxPosition);
@@ -174,7 +174,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
         //if the computers move left no more moves for the player
-        if(!thereAreLegalMovesLeft(true)){
+        if(thereAreNoLegalMovesLeft(true)){
             gameIsRunning = false;
         }
 
@@ -315,16 +315,16 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      * @return true if there is at least one legal move for the specified player (and thus the
      *      game continues), or false otherwise.
      */
-    private boolean thereAreLegalMovesLeft(boolean forPlayer){
+    private boolean thereAreNoLegalMovesLeft(boolean forPlayer){
         final TileColor player = (forPlayer ? TileColor.WHITE : TileColor.BLACK);
 
         for(Position location : greenSpots){
             if(getCaptureCount(location, player) > 0){
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
 

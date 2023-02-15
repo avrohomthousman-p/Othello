@@ -190,6 +190,10 @@ public class OthelloGUI {
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
                 updateStatusBar();
 
+
+                if(model.isGameOver()){
+                    JOptionPane.showMessageDialog(null, "Game Over");
+                }
             }
             catch(IllegalMoveException error){
                 JOptionPane.showMessageDialog(null, error.getMessage());
