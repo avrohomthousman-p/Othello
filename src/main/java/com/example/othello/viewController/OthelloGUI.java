@@ -4,6 +4,7 @@ import com.example.othello.TileColor;
 import com.example.othello.model.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -103,6 +104,7 @@ public class OthelloGUI {
 
         /*     Add contents to the status bar     */
         currentTurn.setText("Your Turn");
+        currentTurn.setBorder(new EmptyBorder(0, 20, 0, 20));
         statusBar.add(currentTurn);
 
         //There are some problems with Tread.sleep()
@@ -112,6 +114,7 @@ public class OthelloGUI {
         statusBar.add(nextTurnBtn);
 
         score.setText(String.format(SCORE_DISPLAY, 2, 2));
+        score.setBorder(new EmptyBorder(0, 20, 0, 20));
         statusBar.add(score);
 
 
