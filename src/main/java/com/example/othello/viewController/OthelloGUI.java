@@ -145,7 +145,19 @@ public class OthelloGUI {
      * Updates the status bar to display the correct score and player turn.
      */
     private void updateStatusBar(){
-        //TODO
+        String turnDisplay;
+
+        if(model.isGameOver()){
+            turnDisplay = (model.getWinner() == TileColor.BLACK ? "Computer Wins." : "You Win!!!");
+        }
+        else {
+            turnDisplay = (model.isPlayersTurn() ? "Your Turn" : "Computers Turn");
+        }
+
+        currentTurn.setText(turnDisplay);
+
+        score.setText(String.format(
+                SCORE_DISPLAY, model.getScoreOfBlackPlayer(), model.getScoreOfWhitePlayer()));
     }
 
 
