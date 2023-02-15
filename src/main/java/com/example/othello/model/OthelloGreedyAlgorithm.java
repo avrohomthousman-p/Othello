@@ -185,16 +185,16 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     /**
-     * Calculates how many spaces change color as a result of the specified move, not
+     * <p>Calculates how many spaces change color as a result of the specified move, not
      * including the move itself. The number of spots captured is calculated, but the actual
-     * spots are not specified.
+     * spots are not specified.</p>
      *
-     * This method looks at the changes that happen in all 8 directions away from the chosen spot.
+     * <p>This method looks at the changes that happen in all 8 directions away from the chosen spot.
      * South, South-West, West, North-West, North, North-East, East, and South-East. These 8
-     * directions are found in the static array 'shifts'
+     * directions are found in the static array 'shifts.'</p>
      *
-     * This method is used to help the computer decide which move to take, and to check if there
-     * are any moves left for any given player.
+     * <p>This method is used to help the computer decide which move to take, and to check if there
+     * are any moves left for any given player.</p>
      *
      * @param possibleNextMove the move whose outcome will be calculated.
      * @param playerDoingMove the player who is (considering) making the specified move.
@@ -247,15 +247,15 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     /**
-     * Finds all the spots that change color as a result of a players move, including the spot
+     * <p>Finds all the spots that change color as a result of a players move, including the spot
      * itself that was chosen by the player. This method checks in all directions going away
-     * from the chosen spot to see if any of the spots there are captured.
+     * from the chosen spot to see if any of the spots there are captured.</p>
      *
-     * This method differs from the {@link this#getCaptureCount getCaptureCount method} in its
+     * <p>This method differs from the {@link this#getCaptureCount getCaptureCount method} in its
      * return type. getCaptureCount only counts the NUMBER of spots captured (to determan if
      * that move is worthwhile), this method collects and returns a List of the spots themselves.
      * This should be used only once the move has already been chosen. This separation avoids the
-     * creation of 8 List objects (one for each direction) for every potential move.
+     * creation of 8 List objects (one for each direction) for every potential move.</p>
      *
      * @param chosenMove the move the player or computer has taken.
      * @param playersTurn a boolean that tells if the move being analyzed was done by the player
