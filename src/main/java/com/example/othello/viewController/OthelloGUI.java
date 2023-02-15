@@ -4,6 +4,7 @@ import com.example.othello.TileColor;
 import com.example.othello.model.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -23,8 +24,6 @@ public class OthelloGUI {
     private final JLabel currentTurn = new JLabel();
     private final JLabel score = new JLabel();
     private final JButton nextTurnBtn = new JButton("next");
-    private boolean playersTurn;
-    private boolean gameOver;
 
 
 
@@ -37,9 +36,6 @@ public class OthelloGUI {
 
         setupStatusBar();
 
-
-        playersTurn = true;
-        gameOver = false;
 
         gameBoard.setVisible(true);
         mainWindow.setVisible(true);
@@ -108,6 +104,7 @@ public class OthelloGUI {
 
         /*     Add contents to the status bar     */
         currentTurn.setText("Your Turn");
+        currentTurn.setBorder(new EmptyBorder(0, 20, 0, 20));
         statusBar.add(currentTurn);
 
         //There are some problems with Tread.sleep()
@@ -117,6 +114,7 @@ public class OthelloGUI {
         statusBar.add(nextTurnBtn);
 
         score.setText(String.format(SCORE_DISPLAY, 2, 2));
+        score.setBorder(new EmptyBorder(0, 20, 0, 20));
         statusBar.add(score);
 
 
@@ -145,7 +143,19 @@ public class OthelloGUI {
      * Updates the status bar to display the correct score and player turn.
      */
     private void updateStatusBar(){
-        //TODO
+        String turnDisplay;
+
+        if(model.isGameOver()){
+            turnDisplay = (model.getWinner() == TileColor.BLACK ? "Computer Wins." : "You Win!!!");
+        }
+        else {
+            turnDisplay = (model.isPlayersTurn() ? "Your Turn" : "Computers Turn");
+        }
+
+        currentTurn.setText(turnDisplay);
+
+        score.setText(String.format(
+                SCORE_DISPLAY, model.getScoreOfBlackPlayer(), model.getScoreOfWhitePlayer()));
     }
 
 
@@ -157,12 +167,12 @@ public class OthelloGUI {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(gameOver){       //stop you from taking a turn after the game ends.
+            if(model.isGameOver()){       //stop you from taking a turn after the game ends.
                 return;
             }
 
             try{
-                if(!playersTurn){
+                if(!model.isPlayersTurn()){
                     throw new IllegalMoveException("its not your turn");
                 }
 
@@ -181,9 +191,12 @@ public class OthelloGUI {
 
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
-                playersTurn = false;
                 updateStatusBar();
 
+
+                if(model.isGameOver()){
+                    JOptionPane.showMessageDialog(null, "Game Over");
+                }
             }
             catch(IllegalMoveException error){
                 JOptionPane.showMessageDialog(null, error.getMessage());
@@ -196,10 +209,10 @@ public class OthelloGUI {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(gameOver){       //Ensure this button won't do anything after the game has ended
+            if(model.isGameOver()){       //Ensure this button won't do anything after the game has ended
                 return;
             }
-            if(playersTurn){
+            if(model.isPlayersTurn()){
                 JOptionPane.showMessageDialog(null,
                         "Its your turn. Click next after you have gone.");
 
@@ -209,12 +222,15 @@ public class OthelloGUI {
 
             List<Position> move = model.getComputerMove();
             if(move == null){       //the computer has no more legal moves.
-                gameOver = true;
                 return;
             }
             updateBoard(move, TileColor.BLACK);
-            playersTurn = true;
             updateStatusBar();
+
+
+            if(model.isGameOver()){
+                JOptionPane.showMessageDialog(null, "Game Over");
+            }
         }
     }
 }
