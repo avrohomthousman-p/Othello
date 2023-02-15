@@ -226,6 +226,11 @@ public class OthelloGUI {
             }
             updateBoard(move, TileColor.BLACK);
             updateStatusBar();
+
+
+            if(model.isGameOver()){
+                JOptionPane.showMessageDialog(null, "Game Over");
+            }
         }
     }
 }
