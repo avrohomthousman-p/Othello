@@ -251,7 +251,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      * itself that was chosen by the player. This method checks in all directions going away
      * from the chosen spot to see if any of the spots there are captured.</p>
      *
-     * <p>This method differs from the {@link this#getCaptureCount getCaptureCount method} in its
+     * <p>This method differs from the {@link OthelloGreedyAlgorithm#getCaptureCount getCaptureCount method} in its
      * return type. getCaptureCount only counts the NUMBER of spots captured (to determan if
      * that move is worthwhile), this method collects and returns a List of the spots themselves.
      * This should be used only once the move has already been chosen. This separation avoids the
