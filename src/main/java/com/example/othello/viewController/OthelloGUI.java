@@ -23,8 +23,6 @@ public class OthelloGUI {
     private final JLabel currentTurn = new JLabel();
     private final JLabel score = new JLabel();
     private final JButton nextTurnBtn = new JButton("next");
-    private boolean playersTurn;
-    private boolean gameOver;
 
 
 
@@ -37,9 +35,6 @@ public class OthelloGUI {
 
         setupStatusBar();
 
-
-        playersTurn = true;
-        gameOver = false;
 
         gameBoard.setVisible(true);
         mainWindow.setVisible(true);
@@ -169,12 +164,12 @@ public class OthelloGUI {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(gameOver){       //stop you from taking a turn after the game ends.
+            if(model.isGameOver()){       //stop you from taking a turn after the game ends.
                 return;
             }
 
             try{
-                if(!playersTurn){
+                if(!model.isPlayersTurn()){
                     throw new IllegalMoveException("its not your turn");
                 }
 
@@ -193,7 +188,6 @@ public class OthelloGUI {
 
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
-                playersTurn = false;
                 updateStatusBar();
 
             }
@@ -208,10 +202,10 @@ public class OthelloGUI {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(gameOver){       //Ensure this button won't do anything after the game has ended
+            if(model.isGameOver()){       //Ensure this button won't do anything after the game has ended
                 return;
             }
-            if(playersTurn){
+            if(model.isPlayersTurn()){
                 JOptionPane.showMessageDialog(null,
                         "Its your turn. Click next after you have gone.");
 
@@ -221,11 +215,9 @@ public class OthelloGUI {
 
             List<Position> move = model.getComputerMove();
             if(move == null){       //the computer has no more legal moves.
-                gameOver = true;
                 return;
             }
             updateBoard(move, TileColor.BLACK);
-            playersTurn = true;
             updateStatusBar();
         }
     }
