@@ -23,7 +23,7 @@ public class OthelloGUI {
     private final OthelloModel model;
     private final JLabel currentTurn = new JLabel();
     private final JLabel score = new JLabel();
-    private final JButton nextTurnBtn = new JButton("next");
+    private Timer timer;
 
 
 
@@ -35,6 +35,8 @@ public class OthelloGUI {
         setupGameBoard();
 
         setupStatusBar();
+
+        setupTimer();
 
 
         gameBoard.setVisible(true);
@@ -107,11 +109,6 @@ public class OthelloGUI {
         currentTurn.setBorder(new EmptyBorder(0, 20, 0, 20));
         statusBar.add(currentTurn);
 
-        //There are some problems with Tread.sleep()
-        //and wait() so instead, the computer only goes when you click
-        //this button.
-        nextTurnBtn.addActionListener(new NextTurnButtonListener());
-        statusBar.add(nextTurnBtn);
 
         score.setText(String.format(SCORE_DISPLAY, 2, 2));
         score.setBorder(new EmptyBorder(0, 20, 0, 20));
@@ -119,6 +116,33 @@ public class OthelloGUI {
 
 
         mainWindow.add(statusBar, BorderLayout.NORTH);
+    }
+
+
+    /**
+     * Sets up the timer object that is used to ensure there is a brief
+     * pause between the players turn and the computers turn.
+     */
+    private void setupTimer(){
+        timer = new Timer(2500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Position> move = model.getComputerMove();
+                if(move == null){       //the computer has no more legal moves.
+                    return;
+                }
+                updateBoard(move, TileColor.BLACK);
+                updateStatusBar();
+
+
+                if(model.isGameOver()){
+                    JOptionPane.showMessageDialog(null, "Game Over");
+                }
+            }
+        });
+
+
+        timer.setRepeats(false);
     }
 
 
@@ -194,42 +218,17 @@ public class OthelloGUI {
                 updateStatusBar();
 
 
+
+
                 if(model.isGameOver()){
                     JOptionPane.showMessageDialog(null, "Game Over");
+                }
+                else{
+                    timer.restart(); //have the computer take its turn
                 }
             }
             catch(IllegalMoveException error){
                 JOptionPane.showMessageDialog(null, error.getMessage());
-            }
-        }
-    }
-
-
-    private class NextTurnButtonListener implements ActionListener{
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(model.isGameOver()){       //Ensure this button won't do anything after the game has ended
-                return;
-            }
-            if(model.isPlayersTurn()){
-                JOptionPane.showMessageDialog(null,
-                        "Its your turn. Click next after you have gone.");
-
-                return;
-            }
-
-
-            List<Position> move = model.getComputerMove();
-            if(move == null){       //the computer has no more legal moves.
-                return;
-            }
-            updateBoard(move, TileColor.BLACK);
-            updateStatusBar();
-
-
-            if(model.isGameOver()){
-                JOptionPane.showMessageDialog(null, "Game Over");
             }
         }
     }
