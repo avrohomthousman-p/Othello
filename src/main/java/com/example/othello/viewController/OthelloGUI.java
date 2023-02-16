@@ -81,6 +81,14 @@ public class OthelloGUI {
     }
 
 
+    /**
+     * Checks the specified HashMap of board positions for the starting color of
+     * the specified board position, and sets its background color accordingly.
+     *
+     * @param coloredTiles a map of all the positions that start as either black or white.
+     * @param i the x index of the position we are setting.
+     * @param j the y index of the position we are checking.
+     */
     private void setStartingColor(HashMap<Point, TileColor> coloredTiles, int i, int j){
         TileColor color = coloredTiles.get(new Point(i, j));
         if(color == null){
