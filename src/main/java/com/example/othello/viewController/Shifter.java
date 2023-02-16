@@ -8,7 +8,7 @@ import java.awt.*;
 public interface Shifter {
     /**
      * Defines a shift from one position in a matrix to another.
-     * For example, moving right would mean incrementing Position.j
+     * For example, moving right would mean incrementing Point.y
      * 
      * @param p the starting position.
      */
