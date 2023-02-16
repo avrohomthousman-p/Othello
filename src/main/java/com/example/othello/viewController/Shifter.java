@@ -1,6 +1,5 @@
 package com.example.othello.viewController;
-
-import com.example.othello.model.Position;
+import java.awt.*;
 
 /**
  * Represents the action of moving from one square on the game board to the adjacent square.
@@ -13,5 +12,5 @@ public interface Shifter {
      * 
      * @param p the starting position.
      */
-    void shift(Position p);
+    void shift(Point p);
 }

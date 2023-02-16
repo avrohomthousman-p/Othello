@@ -2,6 +2,8 @@ package com.example.othello.model;
 
 import com.example.othello.TileColor;
 import com.example.othello.viewController.Shifter;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,18 +18,18 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
     //these are all the directions we need to check for captured pieces
     protected static final Shifter[] shifts = new Shifter[]{
-            (position -> position.i++),                     //move south
-            (position)->{position.i++; position.j++;},      //move south-east
-            (position -> position.j++),                     //move east
-            (position -> {position.i--; position.j++;}),    //move north-east
-            (position -> position.i--),                     //move north
-            (position -> {position.i--; position.j--;}),    //move north-west
-            (position -> position.j--),                     //move west
-            (position -> {position.i++; position.j--;})     //move south-west
+            (position -> position.x++),                     //move south
+            (position)->{position.x++; position.y++;},      //move south-east
+            (position -> position.y++),                     //move east
+            (position -> {position.x--; position.y++;}),    //move north-east
+            (position -> position.x--),                     //move north
+            (position -> {position.x--; position.y--;}),    //move north-west
+            (position -> position.y--),                     //move west
+            (position -> {position.x++; position.y--;})     //move south-west
 
     };
-    protected LinkedList<Position> greenSpots;
-    protected HashMap<Position, TileColor> nonGreenSpots;
+    protected LinkedList<Point> greenSpots;
+    protected HashMap<Point, TileColor> nonGreenSpots;
     private int blackPieces, whitePieces;
     private boolean playersTurn;
     private boolean gameIsRunning = false;
@@ -41,7 +43,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     @Override
-    public HashMap<Position, TileColor> startGame() {
+    public HashMap<Point, TileColor> startGame() {
         resetBoard();
 
 
@@ -50,7 +52,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         blackPieces = 2;
         whitePieces = 2;
 
-        return new HashMap<Position, TileColor>(nonGreenSpots);//deep copy
+        return new HashMap<Point, TileColor>(nonGreenSpots);//deep copy
     }
 
 
@@ -71,10 +73,10 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      */
     private void setStartingNonGreenSpots(){
         //fill hashmap with starting values
-        nonGreenSpots.put(new Position(3, 3), TileColor.WHITE);
-        nonGreenSpots.put(new Position(4, 4), TileColor.WHITE);
-        nonGreenSpots.put(new Position(4, 3), TileColor.BLACK);
-        nonGreenSpots.put(new Position(3, 4), TileColor.BLACK);
+        nonGreenSpots.put(new Point(3, 3), TileColor.WHITE);
+        nonGreenSpots.put(new Point(4, 4), TileColor.WHITE);
+        nonGreenSpots.put(new Point(4, 3), TileColor.BLACK);
+        nonGreenSpots.put(new Point(3, 4), TileColor.BLACK);
     }
 
 
@@ -85,7 +87,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         //fill linkedList with starting values
         for (int i = 0; i < DIMENSIONS; i++){
             for(int j = 0; j < DIMENSIONS; j++){
-                greenSpots.add(new Position(i, j));
+                greenSpots.add(new Point(i, j));
             }
         }
         greenSpots.removeAll(nonGreenSpots.keySet());
@@ -93,7 +95,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     @Override
-    public List<Position> getPlayerMove(Position playerMove) throws IllegalMoveException {
+    public List<Point> getPlayerMove(Point playerMove) throws IllegalMoveException {
         if(!gameIsRunning){
             throw new IllegalMoveException("Turns cannot be taken after the game ended.");
         }
@@ -104,7 +106,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
             throw new IllegalMoveException("players can only go in unoccupied spots");
         }
 
-        List<Position> tilesFlipped = new ArrayList<>();
+        List<Point> tilesFlipped = new ArrayList<>();
         tilesFlipped.add(playerMove);    //the actual place he went needs to become white
         tilesFlipped.addAll(getCapturedSpots(playerMove, true));
 
@@ -114,7 +116,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
         }
 
         //update greenSpots and nonGreenSpots
-        for(Position p : tilesFlipped){
+        for(Point p : tilesFlipped){
             nonGreenSpots.put(p, TileColor.WHITE);
         }
         greenSpots.remove(playerMove);//that's the only one that started as green
@@ -136,7 +138,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     @Override
-    public List<Position> getComputerMove() {
+    public List<Point> getComputerMove() {
         if(!gameIsRunning){
             throw new IllegalStateException("Computer turn was requested when the game is already over.");
         }
@@ -146,8 +148,8 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
         //find the position that captures the most spots
         int maxCaptured = 0;
-        Position maxPosition = null;
-        for(Position p : greenSpots){
+        Point maxPosition = null;
+        for(Point p : greenSpots){
             int count = getCaptureCount(p, TileColor.BLACK);
             if(count >= maxCaptured){
                 maxCaptured = count;
@@ -157,12 +159,12 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
 
-        List<Position> tilesFlipped = getCapturedSpots(maxPosition, false);
+        List<Point> tilesFlipped = getCapturedSpots(maxPosition, false);
         tilesFlipped.add(maxPosition);
 
 
         //update greenSpots and nonGreenSpots
-        for(Position p : tilesFlipped){
+        for(Point p : tilesFlipped){
             nonGreenSpots.put(p, TileColor.BLACK);
         }
         greenSpots.remove(maxPosition);
@@ -201,7 +203,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      * @return the number of spaces that will be captured (change color, not including the move itself),
      *          in all directions, if the specified move is taken.
      */
-    protected int getCaptureCount(Position possibleNextMove, TileColor playerDoingMove){
+    protected int getCaptureCount(Point possibleNextMove, TileColor playerDoingMove){
         int total = 0;
 
         for(Shifter s : shifts){
@@ -223,12 +225,12 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      *
      * @return the number of spots that will be captured (not including the move itself).
      */
-    protected int countSpots(Position chosenMove, Shifter shiftToUse, TileColor playerDoingMove){
-        chosenMove = new Position(chosenMove); //make deep copy
+    protected int countSpots(Point chosenMove, Shifter shiftToUse, TileColor playerDoingMove){
+        chosenMove = new Point(chosenMove); //make deep copy
         int peicesCaptured = 0;
 
         //while index is not out of bounds
-        while(chosenMove.i >= 0 && chosenMove.i < DIMENSIONS && chosenMove.j >= 0 && chosenMove.j < DIMENSIONS){
+        while(chosenMove.x >= 0 && chosenMove.x < DIMENSIONS && chosenMove.y >= 0 && chosenMove.y < DIMENSIONS){
             shiftToUse.shift(chosenMove);
             TileColor color = nonGreenSpots.get(chosenMove);
             if(color == null){//if that spot is not in the hashmap because its green
@@ -261,8 +263,8 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      *                    or the computer.
      * @return a list of all the spots that changed color, including the spot of the move itself.
      */
-    protected List<Position> getCapturedSpots(Position chosenMove, boolean playersTurn){
-        List<Position> spots = new ArrayList<>();
+    protected List<Point> getCapturedSpots(Point chosenMove, boolean playersTurn){
+        List<Point> spots = new ArrayList<>();
         for (Shifter s : shifts){
             spots.addAll(addSpotsToOutput(s, chosenMove, playersTurn));
         }
@@ -282,13 +284,13 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
      * @return a list of spots that change color as a result of the specified move, only taking
      *                    into account changes in one direction (specified by the Shifter input).
      */
-    protected List<Position> addSpotsToOutput(Shifter shiftPosition, Position chosenMove, boolean playersTurn){
-        chosenMove = new Position(chosenMove);//deep copy
-        List<Position> output = new ArrayList<>();
+    protected List<Point> addSpotsToOutput(Shifter shiftPosition, Point chosenMove, boolean playersTurn){
+        chosenMove = new Point(chosenMove);//deep copy
+        List<Point> output = new ArrayList<>();
         TileColor self = (playersTurn ? TileColor.WHITE : TileColor.BLACK);
 
         //index out of bounds check
-        while(chosenMove.i >= 0 && chosenMove.i < DIMENSIONS && chosenMove.j >= 0 && chosenMove.j < DIMENSIONS){
+        while(chosenMove.x >= 0 && chosenMove.x < DIMENSIONS && chosenMove.y >= 0 && chosenMove.y < DIMENSIONS){
             shiftPosition.shift(chosenMove);
             TileColor color = nonGreenSpots.get(chosenMove);
             if(color == null){//if that spot is not in the hashmap because its green
@@ -299,7 +301,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
                 return output;
             }
             else{
-                output.add(new Position(chosenMove));//deep copy
+                output.add(new Point(chosenMove));//deep copy
             }
         }
         output.clear();
@@ -318,7 +320,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
     private boolean thereAreNoLegalMovesLeft(boolean forPlayer){
         final TileColor player = (forPlayer ? TileColor.WHITE : TileColor.BLACK);
 
-        for(Position location : greenSpots){
+        for(Point location : greenSpots){
             if(getCaptureCount(location, player) > 0){
                 return false;
             }

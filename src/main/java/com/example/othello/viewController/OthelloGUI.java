@@ -64,7 +64,7 @@ public class OthelloGUI {
         gameBoard.addMouseListener(new BoardClickListener());
         gameBoard.setLayout(new GridLayout(DIMENSIONS, DIMENSIONS));
 
-        HashMap<Position, TileColor> coloredTiles = model.startGame();
+        HashMap<Point, TileColor> coloredTiles = model.startGame();
 
         //set up each space on the board
         for(int i = 0; i < DIMENSIONS; i++){
@@ -81,8 +81,8 @@ public class OthelloGUI {
     }
 
 
-    private void setStartingColor(HashMap<Position, TileColor> coloredTiles, int i, int j){
-        TileColor color = coloredTiles.get(new Position(i, j));
+    private void setStartingColor(HashMap<Point, TileColor> coloredTiles, int i, int j){
+        TileColor color = coloredTiles.get(new Point(i, j));
         if(color == null){
             boardPanels[i][j].setBackground(Color.GREEN);
         }
@@ -127,7 +127,7 @@ public class OthelloGUI {
         timer = new Timer(2500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Position> move = model.getComputerMove();
+                List<Point> move = model.getComputerMove();
                 if(move == null){       //the computer has no more legal moves.
                     return;
                 }
@@ -152,13 +152,13 @@ public class OthelloGUI {
      * @param tilesFlipped the tiles that need their colors changed.
      * @param player the player who now controls those tiles (the color to display).
      */
-    private void updateBoard(List<Position> tilesFlipped, TileColor player){
+    private void updateBoard(List<Point> tilesFlipped, TileColor player){
         if(player == TileColor.GREEN)
             throw new IllegalArgumentException("a non green tile can never become green");
 
         Color c = (player == TileColor.BLACK ? Color.BLACK : Color.WHITE);
-        for(Position p : tilesFlipped){
-            boardPanels[p.i][p.j].setBackground(c);
+        for(Point p : tilesFlipped){
+            boardPanels[p.x][p.y].setBackground(c);
         }
     }
 
@@ -201,7 +201,7 @@ public class OthelloGUI {
                 }
 
 
-                Position chosen = getPositionClicked(e.getX(), e.getY());
+                Point chosen = getPositionClicked(e.getX(), e.getY());
 
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
@@ -231,10 +231,10 @@ public class OthelloGUI {
          * @param y the Y coordinate of the click event origin.
          * @return a Position object containing the X and Y index of the panel that was clicked.
          */
-        private Position getPositionClicked(int x, int y){
+        private Point getPositionClicked(int x, int y){
             /*   The coordinate clicked divided by the size of each position tells us the
                      index of the clicked panel.   */
-            return new Position(
+            return new Point(
                     (y / (gameBoard.getWidth() / DIMENSIONS)),
                     (x / (gameBoard.getHeight() / DIMENSIONS)));
         }
