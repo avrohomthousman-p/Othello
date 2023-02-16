@@ -201,17 +201,7 @@ public class OthelloGUI {
                 }
 
 
-                int x = e.getX();
-                int y = e.getY();
-
-
-                /*   The coordinate clicked divided by the size of each position tells us the
-                     index of the clicked panel.   */
-                Position chosen = new Position(
-                        (y / (gameBoard.getWidth() / DIMENSIONS)),
-                        (x / (gameBoard.getHeight() / DIMENSIONS)));
-
-
+                Position chosen = getPositionClicked(e.getX(), e.getY());
 
                 //now pass this information to the model, and use those results to update the board
                 updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
@@ -230,6 +220,23 @@ public class OthelloGUI {
             catch(IllegalMoveException error){
                 JOptionPane.showMessageDialog(null, error.getMessage());
             }
+        }
+
+
+        /**
+         * Uses the X and Y coordinate of the click event to calculate which location
+         * on the game board was clicked.
+         *
+         * @param x the X coordinate of the click event origin.
+         * @param y the Y coordinate of the click event origin.
+         * @return a Position object containing the X and Y index of the panel that was clicked.
+         */
+        private Position getPositionClicked(int x, int y){
+            /*   The coordinate clicked divided by the size of each position tells us the
+                     index of the clicked panel.   */
+            return new Position(
+                    (y / (gameBoard.getWidth() / DIMENSIONS)),
+                    (x / (gameBoard.getHeight() / DIMENSIONS)));
         }
     }
 }
