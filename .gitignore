@@ -6,4 +6,5 @@ gradlew.*
 build
 out
 
+*.iml
 
