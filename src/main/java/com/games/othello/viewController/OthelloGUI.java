@@ -1,7 +1,6 @@
 package com.games.othello.viewController;
 
 import com.games.othello.TileColor;
-import com.games.othello.model.*;
 import com.games.othello.model.IllegalMoveException;
 import com.games.othello.model.OthelloGreedyAlgorithm;
 import com.games.othello.model.OthelloModel;
@@ -138,7 +137,7 @@ public class OthelloGUI {
         timer = new Timer(2500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Point> move = model.getComputerMove();
+                List<Point> move = model.takeComputerTurn();
                 if(move == null){       //the computer has no more legal moves.
                     return;
                 }
@@ -215,7 +214,7 @@ public class OthelloGUI {
                 Point chosen = getPositionClicked(e.getX(), e.getY());
 
                 //now pass this information to the model, and use those results to update the board
-                updateBoard(model.getPlayerMove(chosen), TileColor.WHITE);
+                updateBoard(model.takePlayerTurn(chosen), TileColor.WHITE);
                 updateStatusBar();
 
 

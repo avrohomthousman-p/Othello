@@ -37,7 +37,7 @@ public interface OthelloModel {
      * @throws IllegalMoveException if the players chosen move is not a green spot or if that
      *              move does not cause any other spots to change color.
      */
-    List<Point> getPlayerMove(Point playerMove) throws IllegalMoveException;
+    List<Point> takePlayerTurn(Point playerMove) throws IllegalMoveException;
 
 
 
@@ -47,7 +47,7 @@ public interface OthelloModel {
      * @return a list of positions that changed color as a result of the computers move. This
      * includes the actual spot the computer went in. Returns null if there are no moves left.
      */
-    List<Point> getComputerMove();
+    List<Point> takeComputerTurn();
 
 
     /**

@@ -95,7 +95,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     @Override
-    public List<Point> getPlayerMove(Point playerMove) throws IllegalMoveException {
+    public List<Point> takePlayerTurn(Point playerMove) throws IllegalMoveException {
         if(!gameIsRunning){
             throw new IllegalMoveException("Turns cannot be taken after the game ended.");
         }
@@ -138,7 +138,7 @@ public class OthelloGreedyAlgorithm implements OthelloModel {
 
 
     @Override
-    public List<Point> getComputerMove() {
+    public List<Point> takeComputerTurn() {
         if(!gameIsRunning){
             throw new IllegalStateException("Computer turn was requested when the game is already over.");
         }
