@@ -1,7 +1,10 @@
-package com.example.othello.viewController;
+package com.games.othello.viewController;
 
-import com.example.othello.TileColor;
-import com.example.othello.model.*;
+import com.games.othello.TileColor;
+import com.games.othello.model.*;
+import com.games.othello.model.IllegalMoveException;
+import com.games.othello.model.OthelloGreedyAlgorithm;
+import com.games.othello.model.OthelloModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

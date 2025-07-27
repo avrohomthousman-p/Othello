@@ -1,4 +1,4 @@
-package com.example.othello;
+package com.games.othello;
 
 /**
  * Used to track the state of each tile on the board. White and Black belong to the

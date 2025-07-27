@@ -1,6 +1,6 @@
-package com.example.othello.model;
+package com.games.othello.model;
 
-import com.example.othello.TileColor;
+import com.games.othello.TileColor;
 
 import java.awt.Point;
 import java.util.HashMap;

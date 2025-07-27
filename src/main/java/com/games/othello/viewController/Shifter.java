@@ -1,4 +1,4 @@
-package com.example.othello.viewController;
+package com.games.othello.viewController;
 import java.awt.*;
 
 /**

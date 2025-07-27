@@ -1,6 +1,6 @@
-package com.example.othello;
+package com.games.othello;
 
-import com.example.othello.viewController.OthelloGUI;
+import com.games.othello.viewController.OthelloGUI;
 
 public class Main {
 
